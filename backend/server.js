@@ -1,25 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import asyncHandler from 'express-async-handler';
 import colors from 'colors';
 dotenv.config();
 const app = express();
 
-import products from './data/products.js';
 import connectDB from './data/congfig/db.js';
+import productsRoutes from './routes/ProductsRoutes.js';
+import Product from './models/productModel.js';
 
 connectDB();
+
 app.get('/', (request, response) => {
-  response.send(`App is working `);
+  response.json('App is running ');
 });
 
-app.get('/api/products', (request, response) => {
-  response.json(products);
-});
-
-app.get('/api/products/:id', (request, response) => {
-  const product = products.find((product) => product._id === request.params.id);
-  response.json(product);
-});
+app.use('/api/products', productsRoutes);
 
 const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => console.log(`App is running ${PORT}`.yellow.bold));
